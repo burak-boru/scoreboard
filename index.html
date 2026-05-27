@@ -23,7 +23,7 @@ html, body{
     overflow:hidden;
 }
 
-/* ✔️ GRID FIX (IPHONE SAFE) */
+/* MAIN LAYOUT */
 .wrap{
     display:grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -36,7 +36,7 @@ html, body{
     gap:8px;
 }
 
-/* ✔️ CARDS RESPONSIVE */
+/* PLAYER CARDS */
 .card{
     width:100%;
     max-width:340px;
@@ -126,18 +126,23 @@ html, body{
     border:1px solid #333;
 
     margin-top:10px;
+
+    color:white;
 }
 
 .inning-title{
     font-size:11px;
     font-style:italic;
-    color:#fff;
 }
 
 .inning-value{
     font-size:54px;
     font-weight:900;
-    color:#fff;
+}
+
+/* TOUCH */
+.live, .inning{
+    touch-action: manipulation;
 }
 
 </style>
@@ -233,12 +238,8 @@ function update(){
     }
 }
 
-/* ✔️ FIXED INNING LOGIC */
+/* ✔ FIXED LOGIC */
 function commit(){
-
-    if(live === 0){
-        return;
-    }
 
     if(current === 1){
         p1 += live;
@@ -249,16 +250,16 @@ function commit(){
         p2 += live;
         pushTop2(hrList2, live);
         current = 1;
-        inning++;
+        inning++;   // ONLY HERE
     }
 
     live = 0;
     update();
 }
 
-/* controls */
-function plus(){live++;update();}
-function minus(){live=Math.max(0,live-1);update();}
+/* CONTROLS */
+function plus(){ live++; update(); }
+function minus(){ live = Math.max(0, live-1); update(); }
 
 document.addEventListener("keydown",(e)=>{
     if(e.key==="ArrowUp")plus();
@@ -266,6 +267,7 @@ document.addEventListener("keydown",(e)=>{
     if(e.key==="Enter")commit();
 });
 
+/* TOUCH */
 let pressTimer;
 document.getElementById("live").addEventListener("touchstart",()=>{
     pressTimer=setTimeout(()=>minus(),500);
@@ -275,7 +277,9 @@ document.getElementById("live").addEventListener("touchend",()=>{
     plus();
 });
 
-
+/* ✔ INNING CLICK FIX */
+document.getElementById("inningBox").addEventListener("click",commit);
+document.getElementById("inningBox").addEventListener("touchstart",commit);
 
 update();
 
