@@ -236,18 +236,19 @@ function update(){
 /* ✔️ FIXED INNING LOGIC */
 function commit(){
 
-    if(current===1){
-        p1+=live;
-        pushTop2(hrList1,live);
-        current=2;
-    }else{
-        p2+=live;
-        pushTop2(hrList2,live);
-        current=1;
-        inning++;   // ONLY FULL ROUND
+    if(current === 1){
+        p1 += live;
+        pushTop2(hrList1, live);
+        current = 2;
+    } 
+    else {
+        p2 += live;
+        pushTop2(hrList2, live);
+        current = 1;
+        inning++;   // ✔ sadece burada artar
     }
 
-    live=0;
+    live = 0;
     update();
 }
 
