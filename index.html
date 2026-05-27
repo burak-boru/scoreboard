@@ -236,6 +236,11 @@ function update(){
 /* ✔️ FIXED INNING LOGIC */
 function commit(){
 
+    // ✔️ SAFEGUARD: live 0 ise commit ETME
+    if(live === 0){
+        return;
+    }
+
     if(current === 1){
         p1 += live;
         pushTop2(hrList1, live);
@@ -245,7 +250,7 @@ function commit(){
         p2 += live;
         pushTop2(hrList2, live);
         current = 1;
-        inning++;   // ✔ sadece burada artar
+        inning++;
     }
 
     live = 0;
