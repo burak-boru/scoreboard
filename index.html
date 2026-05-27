@@ -29,16 +29,12 @@ html, body{
 /* MAIN WRAP */
 .wrap{
     display:flex;
-    gap:24px;
+    gap:30px;
     align-items:center;
     justify-content:center;
-
     width:100%;
     max-width:100%;
-    padding:6px;
-
-    transform: scale(0.80);
-    transform-origin: center;
+    padding:10px;
 }
 
 /* PLAYER CARD */
@@ -75,7 +71,6 @@ html, body{
     display:flex;
 }
 
-/* HR BOX */
 .hrbox{
     width:180px;
     display:flex;
@@ -103,7 +98,7 @@ html, body{
     align-items:center;
 }
 
-/* LIVE SCORE */
+/* LIVE */
 .live{
     width:240px;
     height:210px;
@@ -116,7 +111,7 @@ html, body{
     border:1px solid #333;
 }
 
-/* INNING */
+/* INNING BOX (UPDATED ONLY VISUAL FIX) */
 .inning{
     width:240px;
     height:110px;
@@ -124,21 +119,28 @@ html, body{
     flex-direction:column;
     justify-content:center;
     align-items:center;
-    background:#111;
-    border:1px solid #333;
+
+    background:#0a0a0a;
+    border:2px solid #444;
     margin-top:10px;
+
+    transition:transform 0.15s ease;
 }
 
-.inning-title{
+/* LABEL */
+.inning-label{
     font-size:12px;
     font-style:italic;
-    color:#f2f2f2;
+    color:#fff;
     letter-spacing:1px;
+    opacity:0.9;
 }
 
+/* VALUE */
 .inning-value{
     font-size:60px;
     font-weight:900;
+    color:#fff;
 }
 
 /* TOUCH */
@@ -172,8 +174,8 @@ html, body{
 
         <div id="live" class="live">0</div>
 
-        <div class="inning">
-            <div class="inning-title" style="color:white !important;">INNING</div>
+        <div class="inning" id="inningBox">
+            <div class="inning-label">INNING</div>
             <div id="inning" class="inning-value">1</div>
         </div>
 
@@ -239,6 +241,11 @@ function update(){
         liveBox.style.background = "#FFD84D";
         liveBox.style.color = "#000";
     }
+
+    /* ✔ INNING ANIMATION (SAFE ADDITION) */
+    let box = document.getElementById("inningBox");
+    box.style.transform = "scale(1.05)";
+    setTimeout(()=>box.style.transform="scale(1)",120);
 }
 
 /* CONTROLS */
