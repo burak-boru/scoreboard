@@ -7,24 +7,22 @@
 
 <style>
 
-*{
-    box-sizing:border-box;
-}
+*{box-sizing:border-box;}
 
-html, body{
+html,body{
     margin:0;
     padding:0;
     width:100%;
     height:100%;
     background:#000;
-    font-family: Arial;
+    font-family:Arial;
     overflow:hidden;
 }
 
 /* LAYOUT */
 .wrap{
     display:grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns:1fr 1fr 1fr;
     width:100vw;
     height:100vh;
     gap:8px;
@@ -162,7 +160,8 @@ html, body{
 
 <script>
 
-let current = 1;
+let turn = 1; // 1 = white, 2 = yellow
+
 let p1 = 0;
 let p2 = 0;
 let live = 0;
@@ -195,7 +194,7 @@ function update(){
 
     let box = document.getElementById("live");
 
-    if(current === 1){
+    if(turn === 1){
         box.style.background = "#fff";
         box.style.color = "#000";
     } else {
@@ -204,27 +203,29 @@ function update(){
     }
 }
 
-/* CORE LOGIC (STABLE) */
+/* ✔ CORE STABLE LOGIC */
 function commit(){
 
     if(live === 0) return;
 
-    if(current === 1){
+    if(turn === 1){
         p1 += live;
         pushTop2(hrList1, live);
-        current = 2;
-    } else {
+        turn = 2;
+    } 
+    else {
         p2 += live;
         pushTop2(hrList2, live);
-        current = 1;
-        inning++;
+
+        turn = 1;
+        inning++;   // ONLY AFTER FULL ROUND
     }
 
     live = 0;
     update();
 }
 
-/* INPUTS */
+/* INPUT */
 function plus(){ live++; update(); }
 function minus(){ live = Math.max(0, live-1); update(); }
 
@@ -234,7 +235,7 @@ document.addEventListener("keydown",(e)=>{
     if(e.key==="Enter") commit();
 });
 
-/* TOUCH LIVE */
+/* TOUCH */
 let pressTimer;
 document.getElementById("live").addEventListener("touchstart",()=>{
     pressTimer = setTimeout(()=> minus(), 500);
@@ -244,8 +245,10 @@ document.getElementById("live").addEventListener("touchend",()=>{
     plus();
 });
 
-/* INNING CLICK (ONLY ONE EVENT — NO CONFLICT) */
+/* INNING CLICK = ENTER */
 document.getElementById("inningBox").addEventListener("click", commit);
+
+update();
 
 </script>
 
