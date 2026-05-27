@@ -19,7 +19,6 @@ html,body{
     overflow:hidden;
 }
 
-/* LAYOUT */
 .wrap{
     display:grid;
     grid-template-columns:1fr 1fr 1fr;
@@ -30,7 +29,7 @@ html,body{
     align-items:center;
 }
 
-/* CARDS */
+/* LEFT + RIGHT */
 .card{
     height:340px;
     display:flex;
@@ -70,7 +69,6 @@ html,body{
     border-top:1px solid #000;
 }
 
-/* COLORS */
 .p1{background:#fff;color:#000;}
 .p2{background:#FFD84D;color:#000;}
 
@@ -82,7 +80,6 @@ html,body{
     justify-content:center;
 }
 
-/* LIVE */
 .live{
     width:220px;
     height:180px;
@@ -91,12 +88,11 @@ html,body{
     align-items:center;
     font-size:80px;
     font-weight:900;
-    background:#fff;   /* ✔ FIX: default white */
+    background:#fff;
     color:#000;
     border:1px solid #333;
 }
 
-/* INNING */
 .inning{
     width:220px;
     height:90px;
@@ -127,7 +123,7 @@ html,body{
 
 <div class="wrap">
 
-    <!-- PLAYER 1 -->
+    <!-- P1 -->
     <div class="card p1">
         <div class="score"><div id="p1">0</div></div>
         <div class="avg">AVG: <span id="avg1">0</span></div>
@@ -139,17 +135,15 @@ html,body{
 
     <!-- CENTER -->
     <div class="center">
-
         <div id="live" class="live">0</div>
 
         <div id="inningBox" class="inning">
             <div class="inning-title">INNING</div>
             <div id="inning" class="inning-value">1</div>
         </div>
-
     </div>
 
-    <!-- PLAYER 2 -->
+    <!-- P2 -->
     <div class="card p2">
         <div class="score"><div id="p2">0</div></div>
         <div class="avg">AVG: <span id="avg2">0</span></div>
@@ -164,7 +158,6 @@ html,body{
 <script>
 
 let turn = 1;
-
 let p1 = 0;
 let p2 = 0;
 let live = 0;
@@ -179,7 +172,6 @@ function pushTop2(list,val){
     if(list.length>2) list.pop();
 }
 
-/* ✔ SINGLE SOURCE OF TRUTH UI */
 function update(){
 
     document.getElementById("p1").innerText = p1;
@@ -196,7 +188,6 @@ function update(){
     document.getElementById("hr1p2").innerText = hrList2[0]||0;
     document.getElementById("hr2p2").innerText = hrList2[1]||0;
 
-    /* ✔ LIVE COLOR FIX (GUARANTEED) */
     let box = document.getElementById("live");
 
     if(turn === 1){
@@ -208,17 +199,14 @@ function update(){
     }
 }
 
-/* ✔ CORE ENGINE */
+/* CORE */
 function commit(){
-
-    if(live === 0) return;
 
     if(turn === 1){
         p1 += live;
         pushTop2(hrList1, live);
         turn = 2;
-    } 
-    else {
+    } else {
         p2 += live;
         pushTop2(hrList2, live);
         turn = 1;
@@ -229,7 +217,7 @@ function commit(){
     update();
 }
 
-/* INPUTS */
+/* INPUT */
 function plus(){ live++; update(); }
 function minus(){ live = Math.max(0, live-1); update(); }
 
@@ -242,15 +230,15 @@ document.addEventListener("keydown",(e)=>{
 /* TOUCH */
 let pressTimer;
 document.getElementById("live").addEventListener("touchstart",()=>{
-    pressTimer = setTimeout(()=> minus(), 500);
+    pressTimer=setTimeout(()=>minus(),500);
 });
 document.getElementById("live").addEventListener("touchend",()=>{
     clearTimeout(pressTimer);
     plus();
 });
 
-/* INNING CLICK */
-document.getElementById("inningBox").addEventListener("click", commit);
+/* INNING CLICK = ENTER */
+document.getElementById("inningBox").addEventListener("click",commit);
 
 update();
 
