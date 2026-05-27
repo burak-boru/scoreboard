@@ -2,10 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-
-<title>3C Scoreboard</title>
+<title>Scoreboard</title>
 
 <style>
 
@@ -23,40 +21,33 @@ html, body{
     overflow:hidden;
 }
 
-/* MAIN LAYOUT */
+/* LAYOUT */
 .wrap{
     display:grid;
     grid-template-columns: 1fr 1fr 1fr;
-    align-items:center;
-
     width:100vw;
     height:100vh;
-
-    padding:8px;
     gap:8px;
+    padding:8px;
+    align-items:center;
 }
 
-/* PLAYER CARDS */
+/* CARDS */
 .card{
-    width:100%;
-    max-width:340px;
     height:340px;
-
     display:flex;
     flex-direction:column;
 }
 
-/* SCORE */
 .score{
-    height:260px;
+    flex:1;
     display:flex;
     justify-content:center;
     align-items:center;
-    font-size:130px;
+    font-size:120px;
     font-weight:800;
 }
 
-/* AVG */
 .avg{
     height:40px;
     display:flex;
@@ -66,7 +57,6 @@ html, body{
     font-weight:700;
 }
 
-/* HR */
 .hrrow{
     height:40px;
     display:flex;
@@ -94,40 +84,29 @@ html, body{
     justify-content:center;
 }
 
-/* LIVE */
 .live{
-    width:100%;
-    max-width:220px;
-    height:190px;
-
+    width:220px;
+    height:180px;
     display:flex;
     justify-content:center;
     align-items:center;
-
-    font-size:90px;
+    font-size:80px;
     font-weight:900;
-
     background:#111;
     border:1px solid #333;
 }
 
-/* INNING */
 .inning{
-    width:100%;
-    max-width:220px;
-    height:100px;
-
+    width:220px;
+    height:90px;
+    margin-top:10px;
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
-
     background:#111;
     border:1px solid #333;
-
-    margin-top:10px;
-
-    color:white;
+    color:#fff;
 }
 
 .inning-title{
@@ -136,13 +115,8 @@ html, body{
 }
 
 .inning-value{
-    font-size:54px;
+    font-size:50px;
     font-weight:900;
-}
-
-/* TOUCH */
-.live, .inning{
-    touch-action: manipulation;
 }
 
 </style>
@@ -154,16 +128,12 @@ html, body{
 
     <!-- PLAYER 1 -->
     <div class="card p1">
-
         <div class="score"><div id="p1">0</div></div>
-
         <div class="avg">AVG: <span id="avg1">0</span></div>
-
         <div class="hrrow">
             <div class="hrbox">HR1: <span id="hr1">0</span></div>
             <div class="hrbox">HR2: <span id="hr2p1">0</span></div>
         </div>
-
     </div>
 
     <!-- CENTER -->
@@ -171,7 +141,7 @@ html, body{
 
         <div id="live" class="live">0</div>
 
-        <div class="inning" id="inningBox">
+        <div id="inningBox" class="inning">
             <div class="inning-title">INNING</div>
             <div id="inning" class="inning-value">1</div>
         </div>
@@ -180,16 +150,12 @@ html, body{
 
     <!-- PLAYER 2 -->
     <div class="card p2">
-
         <div class="score"><div id="p2">0</div></div>
-
         <div class="avg">AVG: <span id="avg2">0</span></div>
-
         <div class="hrrow">
             <div class="hrbox">HR1: <span id="hr1p2">0</span></div>
             <div class="hrbox">HR2: <span id="hr2p2">0</span></div>
         </div>
-
     </div>
 
 </div>
@@ -213,75 +179,73 @@ function pushTop2(list,val){
 
 function update(){
 
-    document.getElementById("p1").innerText=p1;
-    document.getElementById("p2").innerText=p2;
-    document.getElementById("live").innerText=live;
-    document.getElementById("inning").innerText=inning;
+    document.getElementById("p1").innerText = p1;
+    document.getElementById("p2").innerText = p2;
+    document.getElementById("live").innerText = live;
+    document.getElementById("inning").innerText = inning;
 
-    document.getElementById("avg1").innerText=(p1/inning).toFixed(2);
-    document.getElementById("avg2").innerText=(p2/inning).toFixed(2);
+    document.getElementById("avg1").innerText = (p1/inning).toFixed(2);
+    document.getElementById("avg2").innerText = (p2/inning).toFixed(2);
 
-    document.getElementById("hr1").innerText=hrList1[0]||0;
-    document.getElementById("hr2p1").innerText=hrList1[1]||0;
+    document.getElementById("hr1").innerText = hrList1[0]||0;
+    document.getElementById("hr2p1").innerText = hrList1[1]||0;
 
-    document.getElementById("hr1p2").innerText=hrList2[0]||0;
-    document.getElementById("hr2p2").innerText=hrList2[1]||0;
+    document.getElementById("hr1p2").innerText = hrList2[0]||0;
+    document.getElementById("hr2p2").innerText = hrList2[1]||0;
 
-    let box=document.getElementById("live");
+    let box = document.getElementById("live");
 
-    if(current===1){
-        box.style.background="#fff";
-        box.style.color="#000";
-    }else{
-        box.style.background="#FFD84D";
-        box.style.color="#000";
+    if(current === 1){
+        box.style.background = "#fff";
+        box.style.color = "#000";
+    } else {
+        box.style.background = "#FFD84D";
+        box.style.color = "#000";
     }
 }
 
-/* ✔ FIXED LOGIC */
+/* CORE LOGIC (STABLE) */
 function commit(){
+
+    if(live === 0) return;
 
     if(current === 1){
         p1 += live;
         pushTop2(hrList1, live);
         current = 2;
-    } 
-    else {
+    } else {
         p2 += live;
         pushTop2(hrList2, live);
         current = 1;
-        inning++;   // ONLY HERE
+        inning++;
     }
 
     live = 0;
     update();
 }
 
-/* CONTROLS */
+/* INPUTS */
 function plus(){ live++; update(); }
 function minus(){ live = Math.max(0, live-1); update(); }
 
 document.addEventListener("keydown",(e)=>{
-    if(e.key==="ArrowUp")plus();
-    if(e.key==="ArrowDown")minus();
-    if(e.key==="Enter")commit();
+    if(e.key==="ArrowUp") plus();
+    if(e.key==="ArrowDown") minus();
+    if(e.key==="Enter") commit();
 });
 
-/* TOUCH */
+/* TOUCH LIVE */
 let pressTimer;
 document.getElementById("live").addEventListener("touchstart",()=>{
-    pressTimer=setTimeout(()=>minus(),500);
+    pressTimer = setTimeout(()=> minus(), 500);
 });
 document.getElementById("live").addEventListener("touchend",()=>{
     clearTimeout(pressTimer);
     plus();
 });
 
-/* ✔ INNING CLICK FIX */
-document.getElementById("inningBox").addEventListener("click",commit);
-document.getElementById("inningBox").addEventListener("touchstart",commit);
-
-update();
+/* INNING CLICK (ONLY ONE EVENT — NO CONFLICT) */
+document.getElementById("inningBox").addEventListener("click", commit);
 
 </script>
 
