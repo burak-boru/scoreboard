@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Scoreboard iPad v2</title>
+
+<style>
+
+*{box-sizing:border-box;}
+
+html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    background:#000;
+    font-family:Arial;
+    overflow:hidden;
+}
+
+.wrap{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    width:100vw;
+    height:100vh;
+    gap:8px;
+    padding:8px;
+    align-items:center;
+}
+
+/* PLAYER */
+.card{
+    height:340px;
+    display:flex;
+    flex-direction:column;
+}
+
+.score{
+    flex:1;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:120px;
+    font-weight:800;
+}
+
+.avg{
+    height:40px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:14px;
+    font-weight:700;
+}
+
+.hrrow{
+    height:40px;
+    display:flex;
+}
+
+.hrbox{
+    width:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:13px;
+    font-weight:700;
+    border-top:1px solid #000;
+}
+
+.p1{background:#fff;color:#000;}
+.p2{background:#FFD84D;color:#000;}
+
+/* CENTER */
+.center{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+.live{
+    width:220px;
+    height:180px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:80px;
+    font-weight:900;
+    background:#fff;
+    color:#000;
+    border:1px solid #333;
+}
+
+.inning{
+    width:220px;
+    height:90px;
+    margin-top:10px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    background:#111;
+    border:1px solid #333;
+    color:#fff;
+}
+
+.inning-title{
+    font-size:11px;
+    font-style:italic;
+}
+
+.inning-value{
+    font-size:50px;
+    font-weight:900;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+    <div class="card p1">
+        <div class="score"><div id="p1">0</div></div>
+        <div class="avg">AVG: <span id="avg1">0</span></div>
+        <div class="hrrow">
+            <div class="hrbox">HR1: <span id="hr1">0</span></div>
+            <div class="hrbox">HR2: <span id="hr2p1">0</span></div>
+        </div>
+    </div>
+
+    <div class="center">
+
+        <div id="live" class="live">0</div>
+
+        <div id="inningBox" class="inning">
+            <div class="inning-title">INNING</div>
+            <div id="inning" class="inning-value">1</div>
+        </div>
+
+    </div>
+
+    <div class="card p2">
+        <div class="score"><div id="p2">0</div></div>
+        <div class="avg">AVG: <span id="avg2">0</span></div>
+        <div class="hrrow">
+            <div class="hrbox">HR1: <span id="hr1p2">0</span></div>
+            <div class="hrbox">HR2: <span id="hr2p2">0</span></div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+let turn = 1;
+let p1 = 0;
+let p2 = 0;
+let live = 0;
+let inning = 1;
+
+let hrList1 = [];
+let hrList2 = [];
+
+function pushTop2(list,val){
+    list.push(val);
+    list.sort((a,b)=>b-a);
+    if(list.length>2) list.pop();
+}
+
+function update(){
+
+    document.getElementById("p1").innerText = p1;
+    document.getElementById("p2").innerText = p2;
+    document.getElementById("live").innerText = live;
+    document.getElementById("inning").innerText = inning;
+
+    document.getElementById("avg1").innerText = (p1/inning).toFixed(2);
+    document.getElementById("avg2").innerText = (p2/inning).toFixed(2);
+
+    document.getElementById("hr1").innerText = hrList1[0]||0;
+    document.getElementById("hr2p1").innerText = hrList1[1]||0;
+
+    document.getElementById("hr1p2").innerText = hrList2[0]||0;
+    document.getElementById("hr2p2").innerText = hrList2[1]||0;
+
+    let box = document.getElementById("live");
+
+    box.style.background = (turn===1) ? "#fff" : "#FFD84D";
+    box.style.color = "#000";
+}
+
+/* CORE */
+function commit(){
+
+    if(turn===1){
+        p1 += live;
+        pushTop2(hrList1, live);
+        turn = 2;
+    } else {
+        p2 += live;
+        pushTop2(hrList2, live);
+        turn = 1;
+        inning++;
+    }
+
+    live = 0;
+    update();
+}
+
+/* INPUT */
+function plus(){ live++; update(); }
+function minus(){ live = Math.max(0, live-1); update(); }
+
+document.addEventListener("keydown",(e)=>{
+    if(e.key==="Enter") commit();
+    if(e.key==="ArrowUp") plus();
+    if(e.key==="ArrowDown") minus();
+});
+
+/* TOUCH SAFE */
+function tap(el,fn){
+    el.addEventListener("touchend",(e)=>{
+        e.preventDefault();
+        fn();
+    },{passive:false});
+}
+
+tap(document.getElementById("live"), plus);
+tap(document.getElementById("inningBox"), commit);
+
+update();
+
+</script>
+
+</body>
+</html>
