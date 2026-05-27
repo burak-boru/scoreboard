@@ -2,80 +2,86 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>3C Tournament FINAL TOUCH</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>3C Scoreboard</title>
 
 <style>
+
+*{
+    box-sizing:border-box;
+}
+
 html, body{
     margin:0;
     padding:0;
-    background: radial-gradient(circle at center, #111 0%, #000 70%);
-    font-family: Arial;
+    width:100%;
     height:100%;
-    overflow:hidden;
+    background:#000;
+    font-family: Arial;
     display:flex;
     justify-content:center;
     align-items:center;
-    color:white;
+    overflow:hidden;
 }
 
 /* MAIN WRAP */
 .wrap{
     display:flex;
-    gap:110px;
+    gap:30px;
     align-items:center;
-    transform: scale(0.95);
-    transform-origin:center;
+    justify-content:center;
+    width:100%;
+    max-width:100%;
+    padding:10px;
 }
 
 /* PLAYER CARD */
 .card{
-    width:380px;
-    height:380px;
+    width:360px;
+    height:360px;
     display:flex;
     flex-direction:column;
 }
 
-/* SCORE */
+/* SCORE AREA */
 .score{
-    height:300px;
+    height:270px;
     display:flex;
     justify-content:center;
     align-items:center;
-    font-size:150px;
+    font-size:140px;
     font-weight:800;
 }
 
 /* AVG */
 .avg{
-    height:40px;
+    height:45px;
     display:flex;
     justify-content:center;
     align-items:center;
-    font-size:15px;
+    font-size:16px;
     font-weight:700;
-    color:#111;
 }
 
 /* HR ROW */
 .hrrow{
-    height:40px;
+    height:45px;
     display:flex;
 }
 
+/* HR BOX */
 .hrbox{
-    width:190px;
+    width:180px;
     display:flex;
     justify-content:center;
     align-items:center;
     font-size:15px;
     font-weight:700;
-    color:#111;
 
     border-top:1px solid #000;
     border-right:1px solid #000;
-    box-sizing:border-box;
 }
 
 .hrbox:last-child{
@@ -93,14 +99,14 @@ html, body{
     align-items:center;
 }
 
-/* LIVE */
+/* LIVE SCORE */
 .live{
-    width:260px;
-    height:230px;
+    width:240px;
+    height:210px;
     display:flex;
     justify-content:center;
     align-items:center;
-    font-size:110px;
+    font-size:100px;
     font-weight:900;
     background:#111;
     border:1px solid #333;
@@ -108,7 +114,7 @@ html, body{
 
 /* INNING */
 .inning{
-    width:260px;
+    width:240px;
     height:110px;
     display:flex;
     flex-direction:column;
@@ -126,11 +132,11 @@ html, body{
 }
 
 .inning-value{
-    font-size:64px;
+    font-size:60px;
     font-weight:900;
 }
 
-/* TOUCH FIX */
+/* TOUCH */
 .live, .inning{
     touch-action: manipulation;
 }
@@ -230,11 +236,10 @@ function update(){
     }
 }
 
-/* +1 / -1 */
+/* CONTROLS */
 function plus(){ live++; update(); }
 function minus(){ live = Math.max(0, live-1); update(); }
 
-/* INNING ENGINE (FIXED) */
 function commit(){
 
     if(current === 1){
@@ -261,19 +266,18 @@ document.addEventListener("keydown",(e)=>{
 
 /* TOUCH */
 let pressTimer;
-
 const liveBox = document.getElementById("live");
 
-liveBox.addEventListener("touchstart",(e)=>{
+liveBox.addEventListener("touchstart",()=>{
     pressTimer = setTimeout(()=> minus(), 500);
 });
 
-liveBox.addEventListener("touchend",(e)=>{
+liveBox.addEventListener("touchend",()=>{
     clearTimeout(pressTimer);
     plus();
 });
 
-document.querySelector(".inning").addEventListener("touchstart",(e)=>{
+document.querySelector(".inning").addEventListener("touchstart",()=>{
     commit();
 });
 
