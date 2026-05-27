@@ -4,20 +4,32 @@
 <meta charset="UTF-8">
 <title>3C Tournament FINAL TOUCH</title>
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
 <style>
-body{
+html, body{
     margin:0;
+    padding:0;
     background: radial-gradient(circle at center, #111 0%, #000 70%);
     font-family: Arial;
+    height:100%;
+    overflow:hidden;
     display:flex;
     justify-content:center;
     align-items:center;
-    height:100vh;
     color:white;
-    user-select:none;
 }
 
-/* OUTER FRAME */
+/* MAIN WRAP */
+.wrap{
+    display:flex;
+    gap:110px;
+    align-items:center;
+    transform: scale(0.95);
+    transform-origin:center;
+}
+
+/* PLAYER CARD */
 .card{
     width:380px;
     height:380px;
@@ -25,7 +37,7 @@ body{
     flex-direction:column;
 }
 
-/* SCORE AREA */
+/* SCORE */
 .score{
     height:300px;
     display:flex;
@@ -46,7 +58,7 @@ body{
     color:#111;
 }
 
-/* HR */
+/* HR ROW */
 .hrrow{
     height:40px;
     display:flex;
@@ -92,7 +104,6 @@ body{
     font-weight:900;
     background:#111;
     border:1px solid #333;
-    touch-action: manipulation;
 }
 
 /* INNING */
@@ -106,13 +117,11 @@ body{
     background:#111;
     border:1px solid #333;
     margin-top:10px;
-    touch-action: manipulation;
 }
 
 .inning-title{
     font-size:11px;
     font-style:italic;
-    font-weight:400;
     color:#aaa;
 }
 
@@ -121,31 +130,28 @@ body{
     font-weight:900;
 }
 
+/* TOUCH FIX */
+.live, .inning{
+    touch-action: manipulation;
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="wrap" style="display:flex;gap:110px;align-items:center;">
+<div class="wrap">
 
     <!-- PLAYER 1 -->
     <div class="card p1">
 
-        <div class="score">
-            <div id="p1">0</div>
-        </div>
+        <div class="score"><div id="p1">0</div></div>
 
-        <div class="avg">
-            AVG: <span id="avg1">0</span>
-        </div>
+        <div class="avg">AVG: <span id="avg1">0</span></div>
 
         <div class="hrrow">
-            <div class="hrbox">
-                HR1: <span id="hr1">0</span>
-            </div>
-            <div class="hrbox">
-                HR2: <span id="hr2p1">0</span>
-            </div>
+            <div class="hrbox">HR1: <span id="hr1">0</span></div>
+            <div class="hrbox">HR2: <span id="hr2p1">0</span></div>
         </div>
 
     </div>
@@ -165,21 +171,13 @@ body{
     <!-- PLAYER 2 -->
     <div class="card p2">
 
-        <div class="score">
-            <div id="p2">0</div>
-        </div>
+        <div class="score"><div id="p2">0</div></div>
 
-        <div class="avg">
-            AVG: <span id="avg2">0</span>
-        </div>
+        <div class="avg">AVG: <span id="avg2">0</span></div>
 
         <div class="hrrow">
-            <div class="hrbox">
-                HR1: <span id="hr1p2">0</span>
-            </div>
-            <div class="hrbox">
-                HR2: <span id="hr2p2">0</span>
-            </div>
+            <div class="hrbox">HR1: <span id="hr1p2">0</span></div>
+            <div class="hrbox">HR2: <span id="hr2p2">0</span></div>
         </div>
 
     </div>
@@ -205,7 +203,6 @@ function pushTop2(list, val){
     if(list.length > 2) list.pop();
 }
 
-/* UI */
 function update(){
 
     document.getElementById("p1").innerText = p1;
@@ -237,7 +234,7 @@ function update(){
 function plus(){ live++; update(); }
 function minus(){ live = Math.max(0, live-1); update(); }
 
-/* ✔ INNING ENGINE (LOCKED) */
+/* INNING ENGINE (FIXED) */
 function commit(){
 
     if(current === 1){
@@ -255,38 +252,28 @@ function commit(){
     update();
 }
 
-/* KEYBOARD (PC) */
+/* KEYBOARD */
 document.addEventListener("keydown",(e)=>{
     if(e.key==="ArrowUp") plus();
     if(e.key==="ArrowDown") minus();
     if(e.key==="Enter") commit();
 });
 
-/* ✔ TOUCH (iPad / iPhone) */
-
-/* LIVE SCORE */
-const liveBox = document.getElementById("live");
-
+/* TOUCH */
 let pressTimer;
 
-liveBox.addEventListener("touchstart",(e)=>{
-    e.preventDefault();
+const liveBox = document.getElementById("live");
 
-    pressTimer = setTimeout(()=>{
-        minus(); // long press = -1
-    }, 500);
+liveBox.addEventListener("touchstart",(e)=>{
+    pressTimer = setTimeout(()=> minus(), 500);
 });
 
 liveBox.addEventListener("touchend",(e)=>{
-    e.preventDefault();
     clearTimeout(pressTimer);
-
-    plus(); // tap = +1
+    plus();
 });
 
-/* INNING TAP = COMMIT */
 document.querySelector(".inning").addEventListener("touchstart",(e)=>{
-    e.preventDefault();
     commit();
 });
 
