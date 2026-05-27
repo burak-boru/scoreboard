@@ -82,6 +82,7 @@ html,body{
     justify-content:center;
 }
 
+/* LIVE */
 .live{
     width:220px;
     height:180px;
@@ -90,10 +91,12 @@ html,body{
     align-items:center;
     font-size:80px;
     font-weight:900;
-    background:#111;
+    background:#fff;   /* ✔ FIX: default white */
+    color:#000;
     border:1px solid #333;
 }
 
+/* INNING */
 .inning{
     width:220px;
     height:90px;
@@ -160,7 +163,7 @@ html,body{
 
 <script>
 
-let turn = 1; // 1 = white, 2 = yellow
+let turn = 1;
 
 let p1 = 0;
 let p2 = 0;
@@ -176,6 +179,7 @@ function pushTop2(list,val){
     if(list.length>2) list.pop();
 }
 
+/* ✔ SINGLE SOURCE OF TRUTH UI */
 function update(){
 
     document.getElementById("p1").innerText = p1;
@@ -192,6 +196,7 @@ function update(){
     document.getElementById("hr1p2").innerText = hrList2[0]||0;
     document.getElementById("hr2p2").innerText = hrList2[1]||0;
 
+    /* ✔ LIVE COLOR FIX (GUARANTEED) */
     let box = document.getElementById("live");
 
     if(turn === 1){
@@ -203,7 +208,7 @@ function update(){
     }
 }
 
-/* ✔ CORE STABLE LOGIC */
+/* ✔ CORE ENGINE */
 function commit(){
 
     if(live === 0) return;
@@ -216,16 +221,15 @@ function commit(){
     else {
         p2 += live;
         pushTop2(hrList2, live);
-
         turn = 1;
-        inning++;   // ONLY AFTER FULL ROUND
+        inning++;
     }
 
     live = 0;
     update();
 }
 
-/* INPUT */
+/* INPUTS */
 function plus(){ live++; update(); }
 function minus(){ live = Math.max(0, live-1); update(); }
 
@@ -245,7 +249,7 @@ document.getElementById("live").addEventListener("touchend",()=>{
     plus();
 });
 
-/* INNING CLICK = ENTER */
+/* INNING CLICK */
 document.getElementById("inningBox").addEventListener("click", commit);
 
 update();
