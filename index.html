@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>3C Tournament FINAL TOUCH</title>
+
+<style>
+body{
+    margin:0;
+    background: radial-gradient(circle at center, #111 0%, #000 70%);
+    font-family: Arial;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    color:white;
+    user-select:none;
+}
+
+/* OUTER FRAME */
+.card{
+    width:380px;
+    height:380px;
+    display:flex;
+    flex-direction:column;
+}
+
+/* SCORE AREA */
+.score{
+    height:300px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:150px;
+    font-weight:800;
+}
+
+/* AVG */
+.avg{
+    height:40px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:15px;
+    font-weight:700;
+    color:#111;
+}
+
+/* HR */
+.hrrow{
+    height:40px;
+    display:flex;
+}
+
+.hrbox{
+    width:190px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:15px;
+    font-weight:700;
+    color:#111;
+
+    border-top:1px solid #000;
+    border-right:1px solid #000;
+    box-sizing:border-box;
+}
+
+.hrbox:last-child{
+    border-right:none;
+}
+
+/* COLORS */
+.p1{background:#fff;color:#000;}
+.p2{background:#FFD84D;color:#000;}
+
+/* CENTER */
+.center{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+/* LIVE */
+.live{
+    width:260px;
+    height:230px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:110px;
+    font-weight:900;
+    background:#111;
+    border:1px solid #333;
+    touch-action: manipulation;
+}
+
+/* INNING */
+.inning{
+    width:260px;
+    height:110px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    background:#111;
+    border:1px solid #333;
+    margin-top:10px;
+    touch-action: manipulation;
+}
+
+.inning-title{
+    font-size:11px;
+    font-style:italic;
+    font-weight:400;
+    color:#aaa;
+}
+
+.inning-value{
+    font-size:64px;
+    font-weight:900;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="wrap" style="display:flex;gap:110px;align-items:center;">
+
+    <!-- PLAYER 1 -->
+    <div class="card p1">
+
+        <div class="score">
+            <div id="p1">0</div>
+        </div>
+
+        <div class="avg">
+            AVG: <span id="avg1">0</span>
+        </div>
+
+        <div class="hrrow">
+            <div class="hrbox">
+                HR1: <span id="hr1">0</span>
+            </div>
+            <div class="hrbox">
+                HR2: <span id="hr2p1">0</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <div id="live" class="live">0</div>
+
+        <div class="inning">
+            <div class="inning-title">INNING</div>
+            <div id="inning" class="inning-value">1</div>
+        </div>
+
+    </div>
+
+    <!-- PLAYER 2 -->
+    <div class="card p2">
+
+        <div class="score">
+            <div id="p2">0</div>
+        </div>
+
+        <div class="avg">
+            AVG: <span id="avg2">0</span>
+        </div>
+
+        <div class="hrrow">
+            <div class="hrbox">
+                HR1: <span id="hr1p2">0</span>
+            </div>
+            <div class="hrbox">
+                HR2: <span id="hr2p2">0</span>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+let current = 1;
+
+let p1 = 0;
+let p2 = 0;
+
+let live = 0;
+let inning = 1;
+
+let hrList1 = [];
+let hrList2 = [];
+
+function pushTop2(list, val){
+    list.push(val);
+    list.sort((a,b)=>b-a);
+    if(list.length > 2) list.pop();
+}
+
+/* UI */
+function update(){
+
+    document.getElementById("p1").innerText = p1;
+    document.getElementById("p2").innerText = p2;
+    document.getElementById("live").innerText = live;
+    document.getElementById("inning").innerText = inning;
+
+    document.getElementById("avg1").innerText = (p1 / inning).toFixed(2);
+    document.getElementById("avg2").innerText = (p2 / inning).toFixed(2);
+
+    document.getElementById("hr1").innerText = hrList1[0] || 0;
+    document.getElementById("hr2p1").innerText = hrList1[1] || 0;
+
+    document.getElementById("hr1p2").innerText = hrList2[0] || 0;
+    document.getElementById("hr2p2").innerText = hrList2[1] || 0;
+
+    let liveBox = document.getElementById("live");
+
+    if(current === 1){
+        liveBox.style.background = "#fff";
+        liveBox.style.color = "#000";
+    } else {
+        liveBox.style.background = "#FFD84D";
+        liveBox.style.color = "#000";
+    }
+}
+
+/* +1 / -1 */
+function plus(){ live++; update(); }
+function minus(){ live = Math.max(0, live-1); update(); }
+
+/* ✔ INNING ENGINE (LOCKED) */
+function commit(){
+
+    if(current === 1){
+        p1 += live;
+        pushTop2(hrList1, live);
+        current = 2;
+    } else {
+        p2 += live;
+        pushTop2(hrList2, live);
+        current = 1;
+        inning++;
+    }
+
+    live = 0;
+    update();
+}
+
+/* KEYBOARD (PC) */
+document.addEventListener("keydown",(e)=>{
+    if(e.key==="ArrowUp") plus();
+    if(e.key==="ArrowDown") minus();
+    if(e.key==="Enter") commit();
+});
+
+/* ✔ TOUCH (iPad / iPhone) */
+
+/* LIVE SCORE */
+const liveBox = document.getElementById("live");
+
+let pressTimer;
+
+liveBox.addEventListener("touchstart",(e)=>{
+    e.preventDefault();
+
+    pressTimer = setTimeout(()=>{
+        minus(); // long press = -1
+    }, 500);
+});
+
+liveBox.addEventListener("touchend",(e)=>{
+    e.preventDefault();
+    clearTimeout(pressTimer);
+
+    plus(); // tap = +1
+});
+
+/* INNING TAP = COMMIT */
+document.querySelector(".inning").addEventListener("touchstart",(e)=>{
+    e.preventDefault();
+    commit();
+});
+
+update();
+
+</script>
+
+</body>
+</html>
