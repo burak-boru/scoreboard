@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
 <title>3C Scoreboard</title>
 
@@ -26,61 +26,60 @@ html, body{
     overflow:hidden;
 }
 
-/* MAIN WRAP */
+/* MAIN WRAP — FIXED FOR IPHONE */
 .wrap{
     display:flex;
-    gap:12px;
+    gap:10px;
     align-items:center;
     justify-content:center;
 
     width:100vw;
     height:100vh;
 
-    padding:4px;
+    padding:6px;
 }
 
-/* PLAYER CARD */
+/* PLAYER CARD — SLIGHT SCALE DOWN TO PREVENT CROPPING */
 .card{
-    width:360px;
-    height:360px;
+    width:340px;
+    height:340px;
     display:flex;
     flex-direction:column;
 }
 
-/* SCORE AREA */
+/* SCORE */
 .score{
-    height:270px;
+    height:260px;
     display:flex;
     justify-content:center;
     align-items:center;
-    font-size:140px;
+    font-size:130px;
     font-weight:800;
 }
 
 /* AVG */
 .avg{
-    height:45px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:16px;
-    font-weight:700;
-}
-
-/* HR ROW */
-.hrrow{
-    height:45px;
-    display:flex;
-}
-
-.hrbox{
-    width:180px;
+    height:40px;
     display:flex;
     justify-content:center;
     align-items:center;
     font-size:15px;
     font-weight:700;
+}
 
+/* HR */
+.hrrow{
+    height:40px;
+    display:flex;
+}
+
+.hrbox{
+    width:170px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:14px;
+    font-weight:700;
     border-top:1px solid #000;
     border-right:1px solid #000;
 }
@@ -102,45 +101,38 @@ html, body{
 
 /* LIVE */
 .live{
-    width:240px;
-    height:210px;
+    width:220px;
+    height:190px;
     display:flex;
     justify-content:center;
     align-items:center;
-    font-size:100px;
+    font-size:90px;
     font-weight:900;
     background:#111;
     border:1px solid #333;
 }
 
-/* INNING BOX (UPDATED ONLY VISUAL FIX) */
+/* INNING */
 .inning{
-    width:240px;
-    height:110px;
+    width:220px;
+    height:100px;
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
-
-    background:#0a0a0a;
-    border:2px solid #444;
+    background:#111;
+    border:1px solid #333;
     margin-top:10px;
-
-    transition:transform 0.15s ease;
 }
 
-/* LABEL */
-.inning-label{
-    font-size:12px;
+.inning-title{
+    font-size:11px;
     font-style:italic;
     color:#fff;
-    letter-spacing:1px;
-    opacity:0.9;
 }
 
-/* VALUE */
 .inning-value{
-    font-size:60px;
+    font-size:54px;
     font-weight:900;
     color:#fff;
 }
@@ -176,10 +168,10 @@ html, body{
 
         <div id="live" class="live">0</div>
 
-        <div class="inning" id="inningBox">
-    <div class="inning-label-fixed">INNING</div>
-    <div id="inning" class="inning-value-fixed">1</div>
-</div>
+        <div class="inning">
+            <div class="inning-title">INNING</div>
+            <div id="inning" class="inning-value">1</div>
+        </div>
 
     </div>
 
@@ -218,6 +210,7 @@ function pushTop2(list, val){
     if(list.length > 2) list.pop();
 }
 
+/* ✔️ UI */
 function update(){
 
     document.getElementById("p1").innerText = p1;
@@ -243,17 +236,13 @@ function update(){
         liveBox.style.background = "#FFD84D";
         liveBox.style.color = "#000";
     }
-
-    /* ✔ INNING ANIMATION (SAFE ADDITION) */
-    let box = document.getElementById("inningBox");
-    box.style.transform = "scale(1.05)";
-    setTimeout(()=>box.style.transform="scale(1)",120);
 }
 
-/* CONTROLS */
+/* ✔️ CONTROLS */
 function plus(){ live++; update(); }
 function minus(){ live = Math.max(0, live-1); update(); }
 
+/* ✔️ FIXED INNING LOGIC (IMPORTANT) */
 function commit(){
 
     if(current === 1){
@@ -264,7 +253,7 @@ function commit(){
         p2 += live;
         pushTop2(hrList2, live);
         current = 1;
-        inning++;
+        inning++;   // ✔️ ONLY AFTER FULL ROUND
     }
 
     live = 0;
