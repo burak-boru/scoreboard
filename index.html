@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <title>3C Scoreboard</title>
 
@@ -20,29 +20,28 @@ html, body{
     height:100%;
     background:#000;
     font-family: Arial;
-    display:flex;
-    justify-content:center;
-    align-items:center;
     overflow:hidden;
 }
 
-/* MAIN WRAP — FIXED FOR IPHONE */
+/* ✔️ GRID FIX (IPHONE SAFE) */
 .wrap{
-    display:flex;
-    gap:10px;
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items:center;
-    justify-content:center;
 
     width:100vw;
     height:100vh;
 
-    padding:6px;
+    padding:8px;
+    gap:8px;
 }
 
-/* PLAYER CARD — SLIGHT SCALE DOWN TO PREVENT CROPPING */
+/* ✔️ CARDS RESPONSIVE */
 .card{
-    width:340px;
+    width:100%;
+    max-width:340px;
     height:340px;
+
     display:flex;
     flex-direction:column;
 }
@@ -63,7 +62,7 @@ html, body{
     display:flex;
     justify-content:center;
     align-items:center;
-    font-size:15px;
+    font-size:14px;
     font-weight:700;
 }
 
@@ -74,18 +73,13 @@ html, body{
 }
 
 .hrbox{
-    width:170px;
+    width:50%;
     display:flex;
     justify-content:center;
     align-items:center;
-    font-size:14px;
+    font-size:13px;
     font-weight:700;
     border-top:1px solid #000;
-    border-right:1px solid #000;
-}
-
-.hrbox:last-child{
-    border-right:none;
 }
 
 /* COLORS */
@@ -97,31 +91,40 @@ html, body{
     display:flex;
     flex-direction:column;
     align-items:center;
+    justify-content:center;
 }
 
 /* LIVE */
 .live{
-    width:220px;
+    width:100%;
+    max-width:220px;
     height:190px;
+
     display:flex;
     justify-content:center;
     align-items:center;
+
     font-size:90px;
     font-weight:900;
+
     background:#111;
     border:1px solid #333;
 }
 
 /* INNING */
 .inning{
-    width:220px;
+    width:100%;
+    max-width:220px;
     height:100px;
+
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
+
     background:#111;
     border:1px solid #333;
+
     margin-top:10px;
 }
 
@@ -135,11 +138,6 @@ html, body{
     font-size:54px;
     font-weight:900;
     color:#fff;
-}
-
-/* TOUCH */
-.live, .inning{
-    touch-action: manipulation;
 }
 
 </style>
@@ -194,88 +192,80 @@ html, body{
 <script>
 
 let current = 1;
-
 let p1 = 0;
 let p2 = 0;
-
 let live = 0;
 let inning = 1;
 
 let hrList1 = [];
 let hrList2 = [];
 
-function pushTop2(list, val){
+function pushTop2(list,val){
     list.push(val);
     list.sort((a,b)=>b-a);
-    if(list.length > 2) list.pop();
+    if(list.length>2) list.pop();
 }
 
-/* ✔️ UI */
 function update(){
 
-    document.getElementById("p1").innerText = p1;
-    document.getElementById("p2").innerText = p2;
-    document.getElementById("live").innerText = live;
-    document.getElementById("inning").innerText = inning;
+    document.getElementById("p1").innerText=p1;
+    document.getElementById("p2").innerText=p2;
+    document.getElementById("live").innerText=live;
+    document.getElementById("inning").innerText=inning;
 
-    document.getElementById("avg1").innerText = (p1 / inning).toFixed(2);
-    document.getElementById("avg2").innerText = (p2 / inning).toFixed(2);
+    document.getElementById("avg1").innerText=(p1/inning).toFixed(2);
+    document.getElementById("avg2").innerText=(p2/inning).toFixed(2);
 
-    document.getElementById("hr1").innerText = hrList1[0] || 0;
-    document.getElementById("hr2p1").innerText = hrList1[1] || 0;
+    document.getElementById("hr1").innerText=hrList1[0]||0;
+    document.getElementById("hr2p1").innerText=hrList1[1]||0;
 
-    document.getElementById("hr1p2").innerText = hrList2[0] || 0;
-    document.getElementById("hr2p2").innerText = hrList2[1] || 0;
+    document.getElementById("hr1p2").innerText=hrList2[0]||0;
+    document.getElementById("hr2p2").innerText=hrList2[1]||0;
 
-    let liveBox = document.getElementById("live");
+    let box=document.getElementById("live");
 
-    if(current === 1){
-        liveBox.style.background = "#fff";
-        liveBox.style.color = "#000";
-    } else {
-        liveBox.style.background = "#FFD84D";
-        liveBox.style.color = "#000";
+    if(current===1){
+        box.style.background="#fff";
+        box.style.color="#000";
+    }else{
+        box.style.background="#FFD84D";
+        box.style.color="#000";
     }
 }
 
-/* ✔️ CONTROLS */
-function plus(){ live++; update(); }
-function minus(){ live = Math.max(0, live-1); update(); }
-
-/* ✔️ FIXED INNING LOGIC (IMPORTANT) */
+/* ✔️ FIXED INNING LOGIC */
 function commit(){
 
-    if(current === 1){
-        p1 += live;
-        pushTop2(hrList1, live);
-        current = 2;
-    } else {
-        p2 += live;
-        pushTop2(hrList2, live);
-        current = 1;
-        inning++;   // ✔️ ONLY AFTER FULL ROUND
+    if(current===1){
+        p1+=live;
+        pushTop2(hrList1,live);
+        current=2;
+    }else{
+        p2+=live;
+        pushTop2(hrList2,live);
+        current=1;
+        inning++;   // ONLY FULL ROUND
     }
 
-    live = 0;
+    live=0;
     update();
 }
 
-/* KEYBOARD */
+/* controls */
+function plus(){live++;update();}
+function minus(){live=Math.max(0,live-1);update();}
+
 document.addEventListener("keydown",(e)=>{
-    if(e.key==="ArrowUp") plus();
-    if(e.key==="ArrowDown") minus();
-    if(e.key==="Enter") commit();
+    if(e.key==="ArrowUp")plus();
+    if(e.key==="ArrowDown")minus();
+    if(e.key==="Enter")commit();
 });
 
-/* TOUCH */
 let pressTimer;
-const liveBox = document.getElementById("live");
-
-liveBox.addEventListener("touchstart",()=>{
-    pressTimer = setTimeout(()=> minus(), 500);
+document.getElementById("live").addEventListener("touchstart",()=>{
+    pressTimer=setTimeout(()=>minus(),500);
 });
-
-liveBox.addEventListener("touchend",()=>{
+document.getElementById("live").addEventListener("touchend",()=>{
     clearTimeout(pressTimer);
     plus();
 });
