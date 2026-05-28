@@ -5,7 +5,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-<title>Scoreboard iPad Frame</title>
+<title>Scoreboard Arena Mode</title>
 
 <style>
 
@@ -22,27 +22,17 @@ html,body{
     font-family:Arial;
     overflow:hidden;
 
-    /* CENTER FRAME SYSTEM */
     display:flex;
     justify-content:center;
     align-items:center;
 }
 
-/* OUTER FRAME (LETTERBOX AREA) */
-body::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:#000;
-    z-index:-1;
-}
-
-/* MAIN GAME FRAME */
+/* MAIN FRAME */
 .wrap{
     display:grid;
     grid-template-columns:1fr 1fr 1fr;
 
-    width:min(900px, 80vw);
+    width:min(820px, 74vw);
     height:min(520px, 55vh);
 
     gap:12px;
@@ -51,6 +41,10 @@ body::before{
     align-items:center;
 
     background:#000;
+
+    /* ARENA FEEL */
+    box-shadow:0 0 60px rgba(255,255,255,0.05);
+    border-radius:10px;
 }
 
 /* PLAYER CARDS */
@@ -69,6 +63,7 @@ body::before{
     font-weight:800;
 }
 
+/* AVG */
 .avg{
     height:40px;
     display:flex;
@@ -76,13 +71,17 @@ body::before{
     align-items:center;
     font-size:14px;
     font-weight:700;
+
+    border-top:1px solid rgba(0,0,0,0.25);
 }
 
+/* HR ROW */
 .hrrow{
     height:40px;
     display:flex;
 }
 
+/* HR BOX */
 .hrbox{
     width:50%;
     display:flex;
@@ -90,9 +89,11 @@ body::before{
     align-items:center;
     font-size:13px;
     font-weight:700;
-    border-top:1px solid #000;
+
+    border-top:1px solid rgba(0,0,0,0.35);
 }
 
+/* COLORS */
 .p1{
     background:#fff;
     color:#000;
@@ -164,7 +165,9 @@ body::before{
     <!-- PLAYER 1 -->
     <div class="card p1">
         <div class="score"><div id="p1">0</div></div>
+
         <div class="avg">AVG: <span id="avg1">0</span></div>
+
         <div class="hrrow">
             <div class="hrbox">HR1: <span id="hr1">0</span></div>
             <div class="hrbox">HR2: <span id="hr2p1">0</span></div>
@@ -184,7 +187,9 @@ body::before{
     <!-- PLAYER 2 -->
     <div class="card p2">
         <div class="score"><div id="p2">0</div></div>
+
         <div class="avg">AVG: <span id="avg2">0</span></div>
+
         <div class="hrrow">
             <div class="hrbox">HR1: <span id="hr1p2">0</span></div>
             <div class="hrbox">HR2: <span id="hr2p2">0</span></div>
