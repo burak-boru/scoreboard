@@ -5,7 +5,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-<title>Scoreboard Arena Mode</title>
+<title>Scoreboard iPad Frame</title>
 
 <style>
 
@@ -33,27 +33,27 @@ html,body{
     grid-template-columns:1fr 1fr 1fr;
 
     width:min(820px, 74vw);
-    height:min(520px, 55vh);
+    height:min(620px, 78vh);
 
     gap:12px;
     padding:24px;
 
-    align-items:center;
+    align-items:stretch;
 
     background:#000;
 
-    /* ARENA FEEL */
     box-shadow:0 0 60px rgba(255,255,255,0.05);
     border-radius:10px;
 }
 
 /* PLAYER CARDS */
 .card{
-    height:290px;
+    height:100%;
     display:flex;
     flex-direction:column;
 }
 
+/* SCORE */
 .score{
     flex:1;
     display:flex;
@@ -72,7 +72,7 @@ html,body{
     font-size:14px;
     font-weight:700;
 
-    border-top:1px solid rgba(0,0,0,0.25);
+    border-top:1px solid rgba(0,0,0,0.8);
 }
 
 /* HR ROW */
@@ -90,7 +90,7 @@ html,body{
     font-size:13px;
     font-weight:700;
 
-    border-top:1px solid rgba(0,0,0,0.35);
+    border-top:1px solid rgba(0,0,0,0.85);
 }
 
 /* COLORS */
@@ -164,6 +164,7 @@ html,body{
 
     <!-- PLAYER 1 -->
     <div class="card p1">
+
         <div class="score"><div id="p1">0</div></div>
 
         <div class="avg">AVG: <span id="avg1">0</span></div>
@@ -172,20 +173,24 @@ html,body{
             <div class="hrbox">HR1: <span id="hr1">0</span></div>
             <div class="hrbox">HR2: <span id="hr2p1">0</span></div>
         </div>
+
     </div>
 
     <!-- CENTER -->
     <div class="center">
+
         <div id="live" class="live">0</div>
 
         <div id="inningBox" class="inning">
             <div class="inning-title">INNING</div>
             <div id="inning" class="inning-value">1</div>
         </div>
+
     </div>
 
     <!-- PLAYER 2 -->
     <div class="card p2">
+
         <div class="score"><div id="p2">0</div></div>
 
         <div class="avg">AVG: <span id="avg2">0</span></div>
@@ -194,6 +199,7 @@ html,body{
             <div class="hrbox">HR1: <span id="hr1p2">0</span></div>
             <div class="hrbox">HR2: <span id="hr2p2">0</span></div>
         </div>
+
     </div>
 
 </div>
